@@ -73,6 +73,11 @@ C-c n for indent-buffer. I don't use the rest.
   (add-hook 'html-mode-hook
        (lambda ()
             (set-fill-column 100)))
+  (add-hook 'markdown-mode-hook
+       (lambda ()
+            (set-fill-column 75)))
+
+
   (defun indent-buffer ()
        (interactive)
        (save-excursion
@@ -89,7 +94,7 @@ it. I don't think i'd ever use the overwritten.
   (global-set-key (kbd "M-m") 'mark-whole-buffer)
   (global-set-key (kbd "C-c m") 'man)
   (define-key org-mode-map (kbd "C-c p") 'org-publish-current-file)
-  (set-frame-font "Hack 17")
+  (set-frame-font "Monospace 12")
 #+END_SRC
   
 * No idea
@@ -183,7 +188,10 @@ Functions I wrote because emacs lisp is cool and useful.
             (setq cmd-str (concat prog-name " " file-name))
             (shell-command cmd-str)))
 
-
+  (defun sosa/repos ()
+       (interactive)
+       (dired "/home/diego/Escritorio/zpool/repos/"))
+  (global-set-key (kbd "C-c r") 'sosa/repos)
 #+end_src
 * Programs
 Emacs customization, Here is where most of the configuration is.
@@ -266,9 +274,9 @@ And to have multiple buffers
 #+END_SRC
 ** Theme
 #+begin_src emacs-lisp
-  (use-package "exotica-theme"
+  (use-package "base16-theme"
        :ensure t
-       :init(load-theme 'exotica t)
+       :init(load-theme 'base16-black-metal-bathory t)
        )
   (set-cursor-color "purple")
 #+end_src
@@ -306,6 +314,7 @@ I use LSP for perl.
   (add-hook 'perl-mode-hook (lambda ()
                                  (lsp)
                                  (irony-mode -1)))
+  (load-file "~/.config/emacs/perltidy.el")
 #+END_SRC
 *** C*
 This use c-eldoc mode so it prints the function's prototype in the
@@ -325,7 +334,7 @@ to. LSP is also used for further Programming.
 Raku, the cornerstone of any well designed programming language.
 #+begin_src emacs-lisp
   (setq raku-indent-offset 5)
-  (setq raku-exec-path "/usr/bin/raku") 
+  (setq raku-exec-path "/home/diego/.local/bin/raku")
 #+end_src
 *** HTML & CSS offset
 #+begin_src emacs-lisp
@@ -404,6 +413,10 @@ Now let's make the thing lysergic
   (set-face-foreground dired-mark-face "green")
   (set-face-foreground dired-marked-face "blue")
 #+end_src
+Good sorting
+#+begin_src emacs-lisp
+(setq dired-listing-switches "-aBhl  --group-directories-first")
+#+end_src
 ** kill ring popup
 #+BEGIN_SRC emacs-lisp
   (use-package popup-kill-ring
@@ -444,7 +457,7 @@ Multiple cursors :DD
 #+begin_src emacs-lisp
   (use-package "multiple-cursors"
        :ensure t
-       :bind ("C-c q" . 'mc/mark-next-like-this))
+       :bind ("C-x q" . 'mc/mark-next-like-this))
 
 #+end_src
 
@@ -544,7 +557,9 @@ thankfully there's this thing.
   (set-face-font 'org-level-1 "IBM Plex Mono 16")
   (set-face-font 'org-level-2 "IBM Plex Mono 15")
   (set-face-font 'org-level-3 "IBM Plex Mono 14")
-
+  (set-face-font 'org-level-4 "IBM Plex Mono 14")
+  (set-face-font 'org-level-5 "IBM Plex Mono 14")
+  (setq org-hide-emphasis-markers t)
 #+end_src
 ** zzz-to-char
 It's like ace-whatever but for zapping characters.
@@ -680,8 +695,14 @@ written in Perl.
 
 #+begin_src emacs-lisp
   (use-package "ack"
-       :ensure t
-       )
+       :ensure t)
+#+end_src
+** whitespace-cleanup-mode
+Useful for makefiles.
+#+begin_src emacs-lisp
+(use-package "whitespace-cleanup-mode"
+	:ensure t
+	:init(add-hook 'after-init-hook 'whitespace-cleanup-mode))
 #+end_src
 ** Nyancat
 Yes.
@@ -691,7 +712,23 @@ Yes.
        :init(nyan-mode))
 
 #+end_src
-
+** Orderless
+#+begin_src emacs-lisp
+  (use-package orderless
+    :ensure t
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+** web-mode
+#+begin_src emacs-lisp
+  (use-package web-mode
+       :ensure t
+       :config
+       (define-key web-mode-map (kbd "C-c C-e") 'web-mode-element-close)
+       (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+       (define-key web-mode-map (kbd "C-c C-o") 'web-mode-element-insert))
+#+end_src
 * Vertico
 Better interactive selection minibuffer. Alternative to ido and
 helm. This also installs =marginalia-mode=. So you can have further
@@ -709,16 +746,12 @@ information of the commands, files and stuff in the minibuffer.
 
        ;; Different scroll margin
        (setq vertico-scroll-margin 10)
-
        ;; Show more candidates
        (setq vertico-count 10)
-
        ;; Grow and shrink the Vertico minibuffer
        (setq vertico-resize nil)
-
        ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
        (setq vertico-cycle nil))
-
   ;; Persist history over Emacs restarts. Vertico sorts by history position.
   (use-package savehist
        :init
