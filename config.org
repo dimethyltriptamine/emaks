@@ -94,12 +94,7 @@ it. I don't think i'd ever use the overwritten.
   (global-set-key (kbd "M-m") 'mark-whole-buffer)
   (global-set-key (kbd "C-c m") 'man)
   (define-key org-mode-map (kbd "C-c p") 'org-publish-current-file)
-<<<<<<< HEAD
-  (set-frame-font "Monospace 12")
-||||||| parent of 5575988 (no se ni que he hecho)
-  (set-frame-font "Hack 17")
-=======
->>>>>>> 5575988 (no se ni que he hecho)
+  (set-frame-font "Terminus (TTF) 12")
 #+END_SRC
   
 * No idea
@@ -152,8 +147,8 @@ Functions I wrote because emacs lisp is cool and useful.
 
   (setq org-publish-project-alist
        '(("suragu.net"
-              :base-directory "~/docs/qorg_qorg/"
-              :publishing-directory "~/docs/mounts/suragu"
+              :base-directory "~/qorg_qorg/"
+              :publishing-directory "~/docs/mounts/"
               :section-numbers nil
               :publishing-function org-html-publish-to-html
               :table-of-contents nil
@@ -277,24 +272,9 @@ And to have multiple buffers
 #+END_SRC
 ** Theme
 #+begin_src emacs-lisp
-<<<<<<< HEAD
-  (use-package "base16-theme"
-||||||| parent of 5575988 (no se ni que he hecho)
-  (use-package "exotica-theme"
-=======
-  (use-package "zweilight-theme"
->>>>>>> 5575988 (no se ni que he hecho)
+  (use-package "cyberpunk-theme"
        :ensure t
-<<<<<<< HEAD
-       :init(load-theme 'base16-black-metal-bathory t)
-       )
-||||||| parent of 5575988 (no se ni que he hecho)
-       :init(load-theme 'exotica t)
-       )
-=======
-       :init(load-theme 'zweilight t))
-  (set-frame-font "Inconsolata 15")
->>>>>>> 5575988 (no se ni que he hecho)
+       :init(load-theme 'cyberpunk t))
   (set-cursor-color "purple")
 
 #+end_src
@@ -327,18 +307,10 @@ I use LSP for perl.
 #+BEGIN_SRC emacs-lisp
   (setq perl-indent-level 5)
   (defalias 'perl-mode 'cperl-mode)
-  (add-hook 'perl-mode-hook (lambda ()
-<<<<<<< HEAD
-                                 (lsp)
-                                 (irony-mode -1)))
+  (add-hook 'perl-mode-hook (lambda ()))
+
   (load-file "~/.config/emacs/perltidy.el")
-||||||| parent of 5575988 (no se ni que he hecho)
-                                 (lsp)
-                                 (irony-mode -1)))
-=======
-                                 (lsp)))
-  (load-file "~/.config/emacs/perltidy.el")
->>>>>>> 5575988 (no se ni que he hecho)
+
 #+END_SRC
 *** C*
 This use c-eldoc mode so it prints the function's prototype in the
@@ -648,7 +620,7 @@ Yes.
        (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
        (define-key web-mode-map (kbd "C-c C-o") 'web-mode-element-insert))
 #+end_src
-||||||| parent of 5575988 (no se ni que he hecho)
+
 
 =======
 ** Orderless
@@ -659,17 +631,17 @@ Yes.
     (completion-styles '(orderless basic))
     (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
-** web-mode
-#+begin_src emacs-lisp
-  (use-package web-mode
-       :ensure t
-       :config
-       (define-key web-mode-map (kbd "C-c C-e") 'web-mode-element-close)
-       (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-       (define-key web-mode-map (kbd "C-c C-o") 'web-mode-element-insert))
-#+end_src
+** centaur tabs
 
->>>>>>> 5575988 (no se ni que he hecho)
+#+begin_src emacs-lisp
+(use-package centaur-tabs
+  :ensure t
+  :config
+  (centaur-tabs-mode t)
+  :bind
+  ("C-<left>" . centaur-tabs-backward)
+  ("C-<right>" . centaur-tabs-forward))
+#+end_src
 * Vertico
 Better interactive selection minibuffer. Alternative to ido and
 helm. This also installs =marginalia-mode=. So you can have further
